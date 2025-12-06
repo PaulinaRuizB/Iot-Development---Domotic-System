@@ -1,22 +1,17 @@
 ## ESP32-C6 IoT Node – Environmental Monitoring
 
-This project implements an ESP32-C6 IoT node capable of reading environmental data and controlling a WS2812 RGB LED through MQTT. It is designed to work with the ESP-IDF framework and uses Wi-Fi to communicate with an MQTT broker.
+This project implements an ESP32-C6 IoT node capable of reading environmental data. It is designed to work with the ESP-IDF framework and uses Wi-Fi to communicate with an MQTT broker.
 
 ### **Main Features**
 
 * **Sensor Support**
 
   * Reads temperature and humidity using either a **DHT11** or **BME280** sensor.
+  * The code includes the necessary YAML lines to add more sensors. 
   * Automatically parses and publishes sensor data to MQTT topics such as:
 
     * `home/node1/temperature`
     * `home/node1/humidity`
-
-* **WS2812 RGB LED Control**
-
-  * Subscribes to an MQTT topic to receive LED commands.
-  * Allows remote control of color and animations.
-  * Uses RMT for precise timing required by WS2812 LEDs.
 
 * **MQTT Communication**
 
@@ -36,9 +31,8 @@ This project implements an ESP32-C6 IoT node capable of reading environmental da
 ### **How It Works**
 
 1. The ESP32-C6 connects to Wi-Fi and initializes the MQTT client.
-2. It starts the WS2812 LED driver and sensor interface.
-3. A background task reads the sensor periodically and publishes the data to MQTT.
-4. The device listens for incoming MQTT messages to update the LED color in real time.
+2. A background task reads the sensor periodically and publishes the data to MQTT.
+3. The device listens for incoming MQTT messages to update the LED color in real time.
 
 ### **Use Cases**
 
@@ -46,7 +40,4 @@ This project implements an ESP32-C6 IoT node capable of reading environmental da
 * Smart LED lighting
 * IoT dashboards or automation systems
 * Educational and prototype projects
-
-
-Just tell me!
 
