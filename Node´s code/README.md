@@ -1,4 +1,4 @@
-## ESP32-C6 IoT Node – Environmental Monitoring & MQTT Control
+## ESP32-C6 IoT Node – Environmental Monitoring
 
 This project implements an ESP32-C6 IoT node capable of reading environmental data and controlling a WS2812 RGB LED through MQTT. It is designed to work with the ESP-IDF framework and uses Wi-Fi to communicate with an MQTT broker.
 
