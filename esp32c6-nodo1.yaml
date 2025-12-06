@@ -1,0 +1,156 @@
+#configuración ESPHome para ESP32-C6 - Nodo 1
+esphome:
+  name: esp32c6-nodo1
+  friendly_name: Nodo 1 ESP32-C6
+
+esp32:
+  board: esp32-c6-devkitm-1
+  variant: esp32c6
+  framework:
+    type: esp-idf
+
+wifi:
+  ssid: "OPPO A58"
+  password: "LisyandFeli2004:)"
+  power_save_mode: none
+
+logger:
+
+ota:
+  platform: esphome
+
+api:
+
+i2c:
+  sda: GPIO8
+  scl: GPIO9
+  scan: true
+  id: bus_a
+
+# =====================
+#   S E N S O R E S
+# =====================
+sensor:
+  # --- DHT11 ---
+  - platform: dht
+    pin: GPIO4
+    model: DHT11
+    temperature:
+      name: "Nodo 1 Temperatura"
+      id: nodo2_temp
+    humidity:
+      name: "Nodo 1 Humedad"
+      id: nodo2_hum
+    update_interval: 10s
+
+  # --- BME280 ---
+
+  - platform: bme280_i2c
+    temperature:
+      name: "BME280 Temperatura"
+    pressure:
+      name: "BME280 Presion"
+    humidity:
+      name: "BME280 Humedad"
+    address: 0x77
+    update_interval: 10s
+
+  # --- LDR ---
+  - platform: adc
+    pin: GPIO3
+    name: "Nodo 1 Luminosidad"
+    id: nodo2_luz
+    attenuation: 12db
+    update_interval: 5s
+    filters:
+      - multiply: 1000
+
+  # --- MQ135 EN GPIO2 ---
+  - platform: adc
+    pin: GPIO2
+    id: gas_raw
+    name: "Nodo 2 MQ135 (valor bruto)"
+    attenuation: 12db
+    update_interval: 3s
+
+# =====================
+#   BINARY SENSORS
+# =====================
+binary_sensor:
+  - platform: gpio
+    pin: GPIO6
+    name: "Nodo 2 Movimiento"
+    id: pir
+    device_class: motion
+
+# =====================
+#   S W I T C H E S
+# =====================
+switch:
+  # Relé
+  - platform: gpio
+    pin: GPIO7
+    name: "Nodo 2 Relé"
+    id: rele_nodo2
+    restore_mode: 'DISABLED'
+
+  # Buzzer template switch
+  - platform: template
+    name: "Nodo 2 Buzzer"
+    id: buzzer_nodo2
+    turn_on_action:
+      - output.set_level:
+          id: buzzer_pwm
+          level: 70%
+    turn_off_action:
+      - output.turn_off: buzzer_pwm
+
+# =====================
+#   B U Z Z E R
+# =====================
+output:
+  - platform: ledc
+    pin: GPIO5
+    id: buzzer_pwm
+    frequency: 2000 Hz
+
+rtttl:
+  output: buzzer_pwm
+
+# =====================
+#   TEXTO DE ESTADO
+# =====================
+text_sensor:
+  - platform: template
+    id: estado_nodo
+    name: "Nodo 2 Estado"
+
+# =====================
+#   A U T O M A T I Z A C I O N E S
+# =====================
+
+interval:
+  # Alarma de gas
+  - interval: 3s
+    then:
+      - lambda: |-
+          if (id(gas_raw).state > 2.0) {
+            id(rele_nodo2).turn_on();
+            id(buzzer_nodo2).turn_on();
+            id(estado_nodo).publish_state("ALERTA: Gas alto");
+          } else {
+            id(rele_nodo2).turn_off();
+            id(buzzer_nodo2).turn_off();
+          }
+
+  # Encender luz por movimiento + poca luz
+  - interval: 5s
+    then:
+      - lambda: |-
+          if (id(pir).state && id(nodo2_luz).state < 20) {
+            id(rele_nodo2).turn_on();
+            id(estado_nodo).publish_state("Encendido por movimiento");
+          } else {
+            id(rele_nodo2).turn_off();
+          }
+
