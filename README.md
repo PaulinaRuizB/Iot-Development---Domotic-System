@@ -73,7 +73,7 @@ Your ESP32-C6 will appear automatically.
 1. ESP32-C6 reads temperature, humidity and pressure.
 2. Data is serialized and sent via Wi-Fi.
 3. Home Assistant receives the sensor states.
-4. Values are stored in SQLite, InfluxDB, or the HA recorder.
+4. Values are stored in SQLite.
 5. Dashboards visualize:
 
    * Temperature trends
