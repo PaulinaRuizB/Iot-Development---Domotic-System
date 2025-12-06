@@ -1,4 +1,4 @@
-#configuración ESPHome para ESP32-C6 - Nodo 1
+# Node 1 configuration 
 esphome:
   name: esp32c6-nodo1
   friendly_name: Nodo 1 ESP32-C6
@@ -10,8 +10,8 @@ esp32:
     type: esp-idf
 
 wifi:
-  ssid: "OPPO A58"
-  password: "LisyandFeli2004:)"
+  ssid: "Your WIFI name"
+  password: "Your Password"
   power_save_mode: none
 
 logger:
@@ -21,6 +21,9 @@ ota:
 
 api:
 
+# =====================
+# I2C Configuration for the BME280 sensor
+
 i2c:
   sda: GPIO8
   scl: GPIO9
@@ -28,7 +31,7 @@ i2c:
   id: bus_a
 
 # =====================
-#   S E N S O R E S
+#   S E N S O R S
 # =====================
 sensor:
   # --- DHT11 ---
@@ -87,7 +90,7 @@ binary_sensor:
 #   S W I T C H E S
 # =====================
 switch:
-  # Relé
+  # Relay
   - platform: gpio
     pin: GPIO7
     name: "Nodo 2 Relé"
@@ -126,11 +129,11 @@ text_sensor:
     name: "Nodo 2 Estado"
 
 # =====================
-#   A U T O M A T I Z A C I O N E S
+#   A U T O M A T I Z A T I O N
 # =====================
 
 interval:
-  # Alarma de gas
+  # Gas sensor
   - interval: 3s
     then:
       - lambda: |-
@@ -143,7 +146,7 @@ interval:
             id(buzzer_nodo2).turn_off();
           }
 
-  # Encender luz por movimiento + poca luz
+  # Turn on or off lights 
   - interval: 5s
     then:
       - lambda: |-
@@ -153,4 +156,5 @@ interval:
           } else {
             id(rele_nodo2).turn_off();
           }
+
 
