@@ -65,4 +65,14 @@ In Home Assistant:
    * *Light* card to control the WS2812 LED
 3. Group entities into a clean dashboard for monitoring and control.
 
+### **5. Dashboard** 
 
+![Imagen de WhatsApp 2025-12-05 a las 23 58 09_2bf90a38](https://github.com/user-attachments/assets/582ad14b-f0fd-4937-9a83-ccaa438d1452)
+
+### **6. Variable´s control** 
+
+![Imagen de WhatsApp 2025-12-05 a las 23 58 10_fa833116](https://github.com/user-attachments/assets/f98f9d28-fb8d-4f6f-b831-1c95f2747542)
+
+### **7. Configuration through Docker**
+
+![Imagen de WhatsApp 2025-12-05 a las 23 58 11_50b3400b](https://github.com/user-attachments/assets/001763bc-f2b5-48f4-b13c-eda46ef355f4)
