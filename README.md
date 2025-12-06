@@ -1,10 +1,86 @@
 # Iot-Development---Domotic-System
 This repo contains the implementation of a Domotic System through the free firmware called ESPHome and Home Assistant.
 
-## Description: 
+# IoT Environmental Monitoring System with ESP32-C6 and Home Assistant
 
-This project implements a Domotic System using the open source firmware ESPHome and Home Assistant. Basically, consist of secundaries nodes with the ESP32C6 board that receive the data of interest from the sensors BME280 (to monitor the temperatue and atmospheric pressure) and the DHT11 (to monitor humidity). Those data are processed for the main node controlled by the Beagleplay board and send to the Home Assistant platform, where the user can make decisions about what to do in case of register anomalous data. Through this platform it is possible to store the data for a determinate time and to watch different graphics of the system´s behavior.
+This project implements a distributed IoT architecture using **ESP32-C6 sensor nodes** that capture environmental variables and send them to a **central Home Assistant server** running on a **BeaglePlay**.
+The system measures temperature, humidity, atmospheric pressure, gas levels, and light intensity, providing real-time monitoring and historical data visualization.
 
-## Funcionality 
+---
 
-- The secundaries nodes are programmed through the language YAML, a very easy way to understand the code and to control the actions to execute. Each sensor has its own code to define the variales, time of response and actions. This YAML code is send to the main node (the BeaglePlay), where is processed
+## System Architecture Overview
+
+The system is structured into several technological layers:
+
+| Layer             | Technologies                  | Description                                         |
+| ----------------- | ----------------------------- | --------------------------------------------------- |
+| **Physical**      | Wi-Fi → ESP32-C6 ↔ BeaglePlay | Wireless communication between nodes and the server |
+| **Network**       | Wi-Fi                         | Connects each node to the Home Assistant server     |
+| **Transport**     | TCP                           | Reliable delivery of sensor messages                |
+| **Application**   | ESPHome API or MQTT           | Data publishing and device control                  |
+| **Data**          | Home Assistant                | Entity management and device discovery              |
+| **Visualization** | SQLite / InfluxDB / Grafana   | Dashboards, charts, and analytics                   |
+
+---
+
+## Main Components
+
+### **ESP32-C6**
+
+A Wi-Fi microcontroller acting as a sensing node.
+Responsibilities include:
+
+* Reading attached sensors
+* Sending data via ESPHome API or MQTT
+* OTA (over-the-air) firmware updates
+* Executing small automation routines
+
+---
+
+### **Sensors Included**
+
+| Sensor         | Measured Variables              | Notes                                          |
+| -------------- | ------------------------------- | ---------------------------------------------- |
+| **DHT11**      | Temperature, Humidity           | Basic, slow response, needs a pull-up resistor |
+| **BME280**     | Temperature, Humidity, Pressure | High precision, I²C mode needs CSB = 3.3V      |
+
+## Connection to Home Assistant
+
+### ** ESPHome API **
+
+Provides:
+
+* Automatic device discovery
+* Realtime logs
+* OTA updates
+
+Example YAML:
+
+```yaml
+api:
+  encryption:
+    key: "YOUR_KEY_HERE"
+ota:
+```
+
+In Home Assistant:
+**Settings → Devices & Services → ESPHome → Add Device**
+
+Your ESP32-C6 will appear automatically.
+
+## Data Flow
+
+1. ESP32-C6 reads temperature, humidity and pressure.
+2. Data is serialized and sent via Wi-Fi.
+3. Home Assistant receives the sensor states.
+4. Values are stored in SQLite, InfluxDB, or the HA recorder.
+5. Dashboards visualize:
+
+   * Temperature trends
+   * Humidity variation
+   * Pressure differences
+   * Gas detection alerts
+   * Motion-triggered events
+
+
+
