@@ -1,7 +1,7 @@
 # Node 1 configuration 
 esphome:
-  name: esp32c6-nodo1
-  friendly_name: Nodo 1 ESP32-C6
+  name: Cocina
+  friendly_name: Kitchen Node
 
 esp32:
   board: esp32-c6-devkitm-1
@@ -72,19 +72,9 @@ sensor:
   - platform: adc
     pin: GPIO2
     id: gas_raw
-    name: "Nodo 2 MQ135 (valor bruto)"
+    name: "Nodo 1 MQ135 (valor bruto)"
     attenuation: 12db
     update_interval: 3s
-
-# =====================
-#   BINARY SENSORS
-# =====================
-binary_sensor:
-  - platform: gpio
-    pin: GPIO6
-    name: "Nodo 2 Movimiento"
-    id: pir
-    device_class: motion
 
 # =====================
 #   S W I T C H E S
@@ -93,14 +83,14 @@ switch:
   # Relay
   - platform: gpio
     pin: GPIO7
-    name: "Nodo 2 Relé"
-    id: rele_nodo2
+    name: "Luces"
+    id: rele_nodo1
     restore_mode: 'DISABLED'
 
   # Buzzer template switch
   - platform: template
-    name: "Nodo 2 Buzzer"
-    id: buzzer_nodo2
+    name: "Buzzer"
+    id: buzzer_nodo1
     turn_on_action:
       - output.set_level:
           id: buzzer_pwm
@@ -126,7 +116,7 @@ rtttl:
 text_sensor:
   - platform: template
     id: estado_nodo
-    name: "Nodo 2 Estado"
+    name: "Nodo 1 Estado"
 
 # =====================
 #   A U T O M A T I Z A T I O N
@@ -138,12 +128,12 @@ interval:
     then:
       - lambda: |-
           if (id(gas_raw).state > 2.0) {
-            id(rele_nodo2).turn_on();
-            id(buzzer_nodo2).turn_on();
+            id(rele_nodo1).turn_on();
+            id(buzzer_nodo1).turn_on();
             id(estado_nodo).publish_state("ALERTA: Gas alto");
           } else {
-            id(rele_nodo2).turn_off();
-            id(buzzer_nodo2).turn_off();
+            id(rele_nodo1).turn_off();
+            id(buzzer_nodo1).turn_off();
           }
 
   # Turn on or off lights 
@@ -151,10 +141,11 @@ interval:
     then:
       - lambda: |-
           if (id(pir).state && id(nodo2_luz).state < 20) {
-            id(rele_nodo2).turn_on();
+            id(rele_nodo1).turn_on();
             id(estado_nodo).publish_state("Encendido por movimiento");
           } else {
-            id(rele_nodo2).turn_off();
+            id(rele_nodo1).turn_off();
           }
+
 
 
