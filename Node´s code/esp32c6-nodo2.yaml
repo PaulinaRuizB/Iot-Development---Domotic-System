@@ -1,7 +1,7 @@
 # Node 2 configuration 
 esphome:
-  name: esp32c6-node1
-  friendly_name: Node 1 ESP32-C6
+  name: Habitación
+  friendly_name: Bedroom Node
 
 esp32:
   board: esp32-c6-devkitm-1
@@ -50,41 +50,31 @@ sensor:
 
   - platform: bme280_i2c
     temperature:
-      name: "BME280 Temperature"
+      name: "BME280 Temperatura"
     pressure:
-      name: "BME280 Pressure"
+      name: "BME280 Presion"
     humidity:
-      name: "BME280 Humidity"
+      name: "BME280 Humedad"
     address: 0x77
     update_interval: 10s
 
   # --- LDR ---
   - platform: adc
     pin: GPIO3
-    name: "Node 2 Luminosity"
-    id: node2_luz
+    name: "Nodo 1 Luminosidad"
+    id: nodo2_luz
     attenuation: 12db
     update_interval: 5s
     filters:
       - multiply: 1000
 
-  # --- MQ135 GPIO2 ---
+  # --- MQ135 EN GPIO2 ---
   - platform: adc
     pin: GPIO2
     id: gas_raw
-    name: "Node 2 MQ135"
+    name: "Nodo 2 MQ135 (valor bruto)"
     attenuation: 12db
     update_interval: 3s
-
-# =====================
-#   BINARY SENSORS
-# =====================
-binary_sensor:
-  - platform: gpio
-    pin: GPIO6
-    name: "Node 2 Movement"
-    id: pir
-    device_class: motion
 
 # =====================
 #   S W I T C H E S
@@ -93,13 +83,13 @@ switch:
   # Relay
   - platform: gpio
     pin: GPIO7
-    name: "Node 2 Relay"
+    name: "Luces"
     id: rele_nodo2
     restore_mode: 'DISABLED'
 
   # Buzzer template switch
   - platform: template
-    name: "Node 2 Buzzer"
+    name: "Buzzer"
     id: buzzer_nodo2
     turn_on_action:
       - output.set_level:
