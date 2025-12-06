@@ -82,5 +82,7 @@ Your ESP32-C6 will appear automatically.
    * Gas detection alerts
    * Motion-triggered events
 
+## Architecture
 
+<img width="1920" height="1080" alt="Nodo Secundario" src="https://github.com/user-attachments/assets/a650c1b3-53b6-442c-996f-6615d3e20650" />
 
