@@ -28,13 +28,6 @@ On your main computer, ESPHome is not installed directly — it runs inside a Do
 
 **Run ESPHome with Docker:**
 
-```bash
-docker run --rm -it \
-  -v "${PWD}/esphome:/config" \
-  -p 6052:6052 \
-  esphome/esphome
-```
-
 After the container starts, open in your browser:
 
 ```
