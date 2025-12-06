@@ -1,6 +1,7 @@
+# Node 2 configuration 
 esphome:
-  name: esp32c6-nodo2
-  friendly_name: Nodo 2 ESP32-C6
+  name: esp32c6-node1
+  friendly_name: Node 1 ESP32-C6
 
 esp32:
   board: esp32-c6-devkitm-1
@@ -9,8 +10,8 @@ esp32:
     type: esp-idf
 
 wifi:
-  ssid:  "OPPO A58"
-  password: "LisyandFeli2004:)"
+  ssid: "Your WIFI name"
+  password: "Your Password"
   power_save_mode: none
 
 logger:
@@ -20,6 +21,9 @@ ota:
 
 api:
 
+# =====================
+# I2C Configuration for the BME280 sensor
+
 i2c:
   sda: GPIO8
   scl: GPIO9
@@ -27,7 +31,7 @@ i2c:
   id: bus_a
 
 # =====================
-#   S E N S O R E S
+#   S E N S O R S
 # =====================
 sensor:
   # --- DHT11 ---
@@ -37,44 +41,119 @@ sensor:
     temperature:
       name: "Nodo 2 Temperatura"
       id: nodo2_temp
-      filters:
-        - offset: 1.0
     humidity:
       name: "Nodo 2 Humedad"
       id: nodo2_hum
-      filters:
-        - offset: -3.0
     update_interval: 10s
 
   # --- BME280 ---
 
   - platform: bme280_i2c
     temperature:
-      name: "BME280 Temperatura"
+      name: "BME280 Temperature"
     pressure:
-      name: "BME280 Presion"
+      name: "BME280 Pressure"
     humidity:
-      name: "BME280 Humedad"
-    address: 0x76
+      name: "BME280 Humidity"
+    address: 0x77
     update_interval: 10s
 
   # --- LDR ---
-  #- platform: adc
-  #  pin: GPIO3
-  #  name: "Nodo 2 Luminosidad"
-  #  id: nodo2_luz
-  #  attenuation: 12db
-  #  update_interval: 5s
-  #  filters:
-   #   - multiply: 1000
+  - platform: adc
+    pin: GPIO3
+    name: "Node 2 Luminosity"
+    id: node2_luz
+    attenuation: 12db
+    update_interval: 5s
+    filters:
+      - multiply: 1000
 
-  # --- MQ135 EN GPIO2 ---
-  #- platform: adc
-  #  pin: GPIO2
-  #  id: gas_raw
-   # name: "Nodo 2 MQ135 (valor bruto)"
-   # attenuation: 12db
-   # update_interval: 3s
+  # --- MQ135 GPIO2 ---
+  - platform: adc
+    pin: GPIO2
+    id: gas_raw
+    name: "Node 2 MQ135"
+    attenuation: 12db
+    update_interval: 3s
 
+# =====================
+#   BINARY SENSORS
+# =====================
+binary_sensor:
+  - platform: gpio
+    pin: GPIO6
+    name: "Node 2 Movement"
+    id: pir
+    device_class: motion
 
+# =====================
+#   S W I T C H E S
+# =====================
+switch:
+  # Relay
+  - platform: gpio
+    pin: GPIO7
+    name: "Node 2 Relay"
+    id: rele_nodo2
+    restore_mode: 'DISABLED'
+
+  # Buzzer template switch
+  - platform: template
+    name: "Node 2 Buzzer"
+    id: buzzer_nodo2
+    turn_on_action:
+      - output.set_level:
+          id: buzzer_pwm
+          level: 70%
+    turn_off_action:
+      - output.turn_off: buzzer_pwm
+
+# =====================
+#   B U Z Z E R
+# =====================
+output:
+  - platform: ledc
+    pin: GPIO5
+    id: buzzer_pwm
+    frequency: 2000 Hz
+
+rtttl:
+  output: buzzer_pwm
+
+# =====================
+#   TEXTO DE ESTADO
+# =====================
+text_sensor:
+  - platform: template
+    id: estado_nodo
+    name: "Nodo 2 Estado"
+
+# =====================
+#   A U T O M A T I Z A T I O N
+# =====================
+
+interval:
+  # Gas sensor
+  - interval: 3s
+    then:
+      - lambda: |-
+          if (id(gas_raw).state > 2.0) {
+            id(rele_nodo2).turn_on();
+            id(buzzer_nodo2).turn_on();
+            id(estado_nodo).publish_state("ALERTA: Gas alto");
+          } else {
+            id(rele_nodo2).turn_off();
+            id(buzzer_nodo2).turn_off();
+          }
+
+  # Turn on or off lights 
+  - interval: 5s
+    then:
+      - lambda: |-
+          if (id(pir).state && id(nodo2_luz).state < 20) {
+            id(rele_nodo2).turn_on();
+            id(estado_nodo).publish_state("Encendido por movimiento");
+          } else {
+            id(rele_nodo2).turn_off();
+          }
 
