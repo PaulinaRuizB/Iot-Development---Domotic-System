@@ -86,3 +86,7 @@ Your ESP32-C6 will appear automatically.
 
 <img width="1920" height="1080" alt="Nodo Secundario" src="https://github.com/user-attachments/assets/a650c1b3-53b6-442c-996f-6615d3e20650" />
 
+## Physic Implementation
+
+<img width="1240" height="360" alt="image" src="https://github.com/user-attachments/assets/9a857018-975d-4360-afbc-b7ea042ed580" />
+
