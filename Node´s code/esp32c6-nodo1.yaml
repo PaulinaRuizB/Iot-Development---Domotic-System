@@ -70,7 +70,7 @@ sensor:
 
   # --- MQ135 EN GPIO2 ---
   - platform: adc
-    pin: GPIO2
+    pin: GPIO9
     id: gas_raw
     name: "Nodo 1 MQ135 (valor bruto)"
     attenuation: 12db
@@ -146,6 +146,7 @@ interval:
           } else {
             id(rele_nodo1).turn_off();
           }
+
 
 
 
