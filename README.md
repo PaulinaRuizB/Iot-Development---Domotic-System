@@ -1,4 +1,4 @@
-# Iot-Development---Domotic-System
+# Iot-Development: Domotic-System
 This repo contains the implementation of a Domotic System through the free firmware called ESPHome and Home Assistant.
 
 # IoT Environmental Monitoring System with ESP32-C6 and Home Assistant
@@ -46,7 +46,7 @@ Responsibilities include:
 
 ## Connection to Home Assistant
 
-### ** ESPHome API **
+### **ESPHome API**
 
 Provides:
 
