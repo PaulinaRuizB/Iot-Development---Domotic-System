@@ -19,7 +19,7 @@ The system is structured into several technological layers:
 | **Transport**     | TCP                           | Reliable delivery of sensor messages                |
 | **Application**   | ESPHome API or MQTT           | Data publishing and device control                  |
 | **Data**          | Home Assistant                | Entity management and device discovery              |
-| **Visualization** | SQLite / InfluxDB / Grafana   | Dashboards, charts, and analytics                   |
+| **Visualization** | Home Assistant                | Dashboards, charts, and analytics                   |
 
 ---
 
